@@ -26,8 +26,19 @@ static class RegionSelector
         if (active != null) { Ended?.Invoke(); return; }
         var wins = new List<OverlayWindow>();
         active = wins;
-        foreach (var s in Forms.Screen.AllScreens)
-            wins.Add(new OverlayWindow(s.Bounds, ScreenCapture.Grab(s.Bounds), pickWindow));
+        try
+        {
+            foreach (var s in Forms.Screen.AllScreens)
+                wins.Add(new OverlayWindow(s.Bounds, ScreenCapture.Grab(s.Bounds), pickWindow));
+        }
+        catch
+        {
+            // a failed grab (secure desktop, display change) must not leave the picker "busy" forever
+            active = null;
+            foreach (var w in wins) { try { w.Close(); } catch { } }
+            Ended?.Invoke();
+            throw;
+        }
 
         void CloseAll()
         {

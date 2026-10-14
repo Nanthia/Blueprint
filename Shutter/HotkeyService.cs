@@ -26,7 +26,8 @@ sealed class HotkeyService : IDisposable
         if (msg == Native.WM_HOTKEY && ids.TryGetValue(wParam.ToInt32(), out var action))
         {
             handled = true;
-            onAction(action);
+            // run after the message returns so a long action (dialogs, captures) never blocks inside the window procedure
+            System.Windows.Application.Current.Dispatcher.BeginInvoke(new Action(() => onAction(action)));
         }
         return IntPtr.Zero;
     }

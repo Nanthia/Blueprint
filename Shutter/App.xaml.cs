@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
@@ -44,9 +45,29 @@ public partial class App : Application
         DispatcherUnhandledException += (_, ex) =>
         {
             try { File.AppendAllText(Path.Combine(Settings.Dir, "error.log"), $"{DateTime.Now}: {ex.Exception}\n\n"); } catch { }
-            Notify("Something went wrong: " + ex.Exception.Message);
-            ex.Handled = true;
+            ex.Handled = true; // mark first: an error while reporting an error must never take the app down
+            try { Notify("Something went wrong: " + ex.Exception.Message); } catch { }
         };
+
+        // Anything that would kill the process silently (non-UI threads, unobserved tasks) gets written down first.
+        AppDomain.CurrentDomain.UnhandledException += (_, ex) =>
+        {
+            try { File.AppendAllText(Path.Combine(Settings.Dir, "error.log"), $"{DateTime.Now}: FATAL (terminating={ex.IsTerminating}) {ex.ExceptionObject}\n\n"); } catch { }
+        };
+        TaskScheduler.UnobservedTaskException += (_, ex) =>
+        {
+            try { File.AppendAllText(Path.Combine(Settings.Dir, "error.log"), $"{DateTime.Now}: unobserved task error {ex.Exception}\n\n"); } catch { }
+            ex.SetObserved();
+        };
+        // A leftover marker means the last run ended without a clean exit (crash, kill, power loss).
+        try
+        {
+            Directory.CreateDirectory(Settings.Dir);
+            if (File.Exists(RunMarker)) Log("Previous session did not exit cleanly.");
+            File.WriteAllText(RunMarker, Environment.ProcessId.ToString());
+        }
+        catch { }
+        SessionEnding += (_, s) => Log("Windows session ending: " + s.ReasonSessionEnding);
 
         BuildTray();
         RegionSelector.Ended += () => SetCapturing(false);
@@ -62,6 +83,8 @@ public partial class App : Application
 
     protected override void OnExit(ExitEventArgs e)
     {
+        Log("Exiting (code " + e.ApplicationExitCode + ").");
+        try { File.Delete(RunMarker); } catch { }
         hotkeys?.Dispose();
         if (tray != null) { tray.Visible = false; tray.Dispose(); }
         mutex?.Dispose();
@@ -121,6 +144,8 @@ public partial class App : Application
             E("Power", "Quit Shutter", "", Shutdown),
         });
     }
+
+    static string RunMarker => Path.Combine(Settings.Dir, "running.pid");
 
     static void Log(string msg)
     {
