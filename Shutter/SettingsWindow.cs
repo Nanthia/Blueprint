@@ -65,7 +65,7 @@ public sealed class SettingsWindow : ShutterWindow
 
         var footer = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(18, 0, 18, 16) };
         footer.Children.Add(new ApertureLogo { Width = 22, Height = 22 });
-        footer.Children.Add(new TextBlock { Text = "Shutter 1.0", Foreground = Ui.B("Text3Brush"), Margin = new Thickness(10, 0, 0, 0), VerticalAlignment = VerticalAlignment.Center });
+        footer.Children.Add(new TextBlock { Text = "Shutter " + AppVersion(), Foreground = Ui.B("Text3Brush"), Margin = new Thickness(10, 0, 0, 0), VerticalAlignment = VerticalAlignment.Center });
         DockPanel.SetDock(footer, Dock.Bottom);
         panel.Children.Add(footer);
 
@@ -274,6 +274,12 @@ public sealed class SettingsWindow : ShutterWindow
         }
 
         if (current == "General") AboutCard();
+    }
+
+    static string AppVersion()
+    {
+        var v = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+        return v == null ? "" : $"{v.Major}.{v.Minor}.{v.Build}";
     }
 
     static TextBlock Header(string text) => new() { Text = text, FontSize = 24, FontWeight = FontWeights.SemiBold, Margin = new Thickness(0, 0, 0, 2) };

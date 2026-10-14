@@ -67,46 +67,80 @@ public sealed class IconPresenter : Control
     }
 }
 
-/// <summary>The six-blade aperture mark from the brand kit (optionally on the rounded tile).</summary>
+/// <summary>The Shutter bunny mark (from brand/bunny/bunny-app-icon.svg), optionally on the rounded app tile.</summary>
 public sealed class ApertureLogo : FrameworkElement
 {
     public static readonly DependencyProperty WithTileProperty = DependencyProperty.Register(nameof(WithTile), typeof(bool), typeof(ApertureLogo),
         new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.AffectsRender));
     public bool WithTile { get => (bool)GetValue(WithTileProperty); set => SetValue(WithTileProperty, value); }
 
-    static readonly (string d, string fill)[] Blades =
+    static Geometry G(string d) { var g = Geometry.Parse(d); g.Freeze(); return g; }
+    static SolidColorBrush Sb(string hex, double opacity = 1)
     {
-        ("M128.00 102.00 L150.52 115.00 L203.93 145.84 A78 78 0 0 0 181.42 71.16 Z", "#0A84FF"),
-        ("M150.52 115.00 L150.52 141.00 L150.52 202.68 A78 78 0 0 0 203.93 145.84 Z", "#3B9DFF"),
-        ("M150.52 141.00 L128.00 154.00 L74.58 184.84 A78 78 0 0 0 150.52 202.68 Z", "#0A6FDB"),
-        ("M128.00 154.00 L105.48 141.00 L52.07 110.16 A78 78 0 0 0 74.58 184.84 Z", "#5AADFF"),
-        ("M105.48 141.00 L105.48 115.00 L105.48 53.32 A78 78 0 0 0 52.07 110.16 Z", "#0A84FF"),
-        ("M105.48 115.00 L128.00 102.00 L181.42 71.16 A78 78 0 0 0 105.48 53.32 Z", "#1F78E6"),
-    };
+        var b = new SolidColorBrush((Color)ColorConverter.ConvertFromString(hex)) { Opacity = opacity };
+        b.Freeze();
+        return b;
+    }
 
-    static readonly List<(Geometry g, Brush b)> parts = Blades.Select(b =>
-    {
-        var g = Geometry.Parse(b.d); g.Freeze();
-        var br = (Brush)new BrushConverter().ConvertFromString(b.fill)!; br.Freeze();
-        return (g, br);
-    }).ToList();
+    static readonly Geometry EarL = G("M86 116 C70 82 68 44 84 28 C100 14 118 34 120 70 C121 90 118 106 112 118 Z");
+    static readonly Geometry EarLInner = G("M90 108 C80 82 80 52 88 42 C97 33 107 48 108 74 C109 90 107 100 104 110 Z");
+    static readonly Geometry EarR = G("M146 118 C140 90 142 64 158 54 C172 45 192 52 202 70 C206 78 200 85 192 80 C182 74 174 72 170 80 C166 90 168 104 170 118 Z");
+    static readonly Geometry EarRInner = G("M152 110 C148 90 150 70 160 62 C170 56 184 60 192 70 C182 66 172 66 166 74 C162 84 162 98 164 110 Z");
+    static readonly Geometry Head = G("M128 92 C178 92 214 120 214 160 C214 196 178 214 128 214 C78 214 42 196 42 160 C42 120 78 92 128 92 Z");
+    static readonly Geometry Nose = G("M117 152 C117 146 139 145 141 151 C142 156 134 162 129 162 C123 162 117 157 117 152 Z");
+    static readonly Geometry Mouth = G("M129 161 L129 176 M129 176 L120 186 M129 176 L139 185");
 
+    static readonly Brush Fur = Frozen(new LinearGradientBrush(Color.FromRgb(0xD7, 0xD8, 0xDC), Color.FromRgb(0xB9, 0xBC, 0xC2), new Point(0, 0), new Point(0, 1)));
+    static readonly Brush Muzzle = Frozen(new RadialGradientBrush(Color.FromRgb(0xFB, 0xF3, 0xEA), Color.FromRgb(0xEA, 0xDC, 0xCB)) { Center = new Point(.5, .4), GradientOrigin = new Point(.5, .4), RadiusX = .6, RadiusY = .6 });
+    static readonly Brush Inner = Sb("#F2C9B8"), Cheek = Sb("#F09A8A", .35), Brown = Sb("#5A3328"), EyeB = Sb("#141416"), White = Sb("#FFFFFF");
+    static readonly Pen MouthPen = FrozenPen(new Pen(Brown, 4) { StartLineCap = PenLineCap.Round, EndLineCap = PenLineCap.Round, LineJoin = PenLineJoin.Round });
+
+    static Brush Frozen(Brush b) { b.Freeze(); return b; }
+    static Pen FrozenPen(Pen p) { p.Freeze(); return p; }
+
+    /// <summary>Draws the bunny. With <paramref name="tile"/> it sits on the rounded app tile (256-unit canvas); without it the head fills the box.</summary>
     public static void Draw(DrawingContext dc, double size, bool tile)
     {
-        double s = size / 256.0;
-        dc.PushTransform(new ScaleTransform(s, s));
         if (tile)
         {
-            var grad = new LinearGradientBrush(Color.FromRgb(0x34, 0x34, 0x3A), Color.FromRgb(0x17, 0x17, 0x1A), 90);
+            double s = size / 256.0;
+            dc.PushTransform(new ScaleTransform(s, s));
+            var grad = new LinearGradientBrush(Color.FromRgb(0x34, 0x34, 0x3A), Color.FromRgb(0x17, 0x17, 0x1A), new Point(0, 0), new Point(0, 1));
             dc.DrawRoundedRectangle(grad, null, new Rect(8, 8, 240, 240), 56, 56);
-            var rim = new LinearGradientBrush(Color.FromArgb(46, 255, 255, 255), Color.FromArgb(0, 255, 255, 255), 90);
-            dc.DrawRoundedRectangle(null, new Pen(rim, 1.5), new Rect(8.75, 8.75, 238.5, 238.5), 55.25, 55.25);
+            dc.PushClip(new RectangleGeometry(new Rect(8, 8, 240, 240), 56, 56));
+            DrawBunny(dc);
+            dc.Pop();
+            dc.DrawRoundedRectangle(null, new Pen(new SolidColorBrush(Color.FromArgb(31, 255, 255, 255)), 1.5), new Rect(8.75, 8.75, 238.5, 238.5), 55.25, 55.25);
+            dc.Pop();
         }
-        var pen = new Pen(new SolidColorBrush(Color.FromRgb(0x1F, 0x1F, 0x23)), 5) { LineJoin = PenLineJoin.Round };
-        foreach (var (g, b) in parts) dc.DrawGeometry(b, pen, g);
-        dc.DrawEllipse(null, new Pen(new SolidColorBrush(Color.FromRgb(0x0E, 0x0E, 0x10)), 5), new Point(128, 128), 80.5, 80.5);
-        dc.DrawEllipse(null, new Pen(new SolidColorBrush(Color.FromArgb(26, 255, 255, 255)), 2), new Point(128, 128), 84, 84);
-        dc.Pop();
+        else
+        {
+            // bunny-mark.svg viewBox: 20 10 216 216
+            double s = size / 216.0;
+            dc.PushTransform(new ScaleTransform(s, s));
+            dc.PushTransform(new TranslateTransform(-20, -10));
+            DrawBunny(dc);
+            dc.Pop();
+            dc.Pop();
+        }
+    }
+
+    static void DrawBunny(DrawingContext dc)
+    {
+        dc.DrawGeometry(Fur, null, EarL);
+        dc.DrawGeometry(Inner, null, EarLInner);
+        dc.DrawGeometry(Fur, null, EarR);
+        dc.DrawGeometry(Inner, null, EarRInner);
+        dc.DrawGeometry(Fur, null, Head);
+        dc.DrawEllipse(Muzzle, null, new Point(128, 170), 38, 31);
+        dc.DrawEllipse(Cheek, null, new Point(78, 170), 12, 7);
+        dc.DrawEllipse(Cheek, null, new Point(178, 166), 12, 7);
+        dc.DrawGeometry(Brown, null, Nose);
+        dc.DrawGeometry(null, MouthPen, Mouth);
+        dc.DrawEllipse(EyeB, null, new Point(85, 145), 9, 10);
+        dc.DrawEllipse(White, null, new Point(88, 141.5), 2.6, 2.6);
+        dc.DrawEllipse(EyeB, null, new Point(171, 140), 9, 10);
+        dc.DrawEllipse(White, null, new Point(174, 136.5), 2.6, 2.6);
     }
 
     protected override void OnRender(DrawingContext dc) => Draw(dc, Math.Min(ActualWidth, ActualHeight), WithTile);

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Input;
 using System.Windows.Interop;
 
@@ -74,6 +75,13 @@ sealed class HotkeyService : IDisposable
         source.Dispose();
     }
 
+    static readonly Dictionary<Key, string> KeyNames = new()
+    {
+        [Key.Oem3] = "`", [Key.OemMinus] = "-", [Key.OemPlus] = "=", [Key.Oem4] = "[", [Key.Oem6] = "]", [Key.Oem5] = "\\",
+        [Key.Oem1] = ";", [Key.Oem7] = "'", [Key.OemComma] = ",", [Key.OemPeriod] = ".", [Key.Oem2] = "/",
+        [Key.Return] = "Enter", [Key.Prior] = "PageUp", [Key.Next] = "PageDown", [Key.Snapshot] = "PrintScreen",
+    };
+
     public static bool TryParse(string text, out uint mods, out uint vk)
     {
         mods = 0; vk = 0;
@@ -86,8 +94,11 @@ sealed class HotkeyService : IDisposable
                 case "alt": mods |= Native.MOD_ALT; break;
                 case "win": mods |= Native.MOD_WIN; break;
                 default:
+                    var friendly = KeyNames.FirstOrDefault(kv => kv.Value == part);
                     var name = part.Length == 1 && char.IsDigit(part[0]) ? "D" + part : part;
-                    if (!Enum.TryParse<Key>(name, true, out var key)) return false;
+                    Key key;
+                    if (friendly.Value != null) key = friendly.Key;
+                    else if (!Enum.TryParse<Key>(name, true, out key)) return false;
                     vk = (uint)KeyInterop.VirtualKeyFromKey(key);
                     break;
             }
@@ -102,7 +113,7 @@ sealed class HotkeyService : IDisposable
         if (m.HasFlag(ModifierKeys.Shift)) parts.Add("Shift");
         if (m.HasFlag(ModifierKeys.Alt)) parts.Add("Alt");
         if (m.HasFlag(ModifierKeys.Windows)) parts.Add("Win");
-        parts.Add(key >= Key.D0 && key <= Key.D9 ? ((int)(key - Key.D0)).ToString() : key.ToString());
+        parts.Add(key >= Key.D0 && key <= Key.D9 ? ((int)(key - Key.D0)).ToString() : KeyNames.TryGetValue(key, out var nice) ? nice : key.ToString());
         return string.Join("+", parts);
     }
 }

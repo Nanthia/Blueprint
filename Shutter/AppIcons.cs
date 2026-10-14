@@ -9,7 +9,7 @@ using Drawing = System.Drawing;
 
 namespace Shutter;
 
-/// <summary>Window and tray icons drawn from the brand geometry (no image files needed at runtime).</summary>
+/// <summary>Window and tray icons drawn from the bunny brand geometry (no image files needed at runtime).</summary>
 static class AppIcons
 {
     static ImageSource? window;
@@ -27,15 +27,12 @@ static class AppIcons
         return rtb;
     }
 
-    // ---- tray glyph (16-unit grid from brand/tray-icon-*.svg): six blades with thin gaps ----
-    static readonly string[] TrayBlades =
+    // ---- tray glyph: bunny silhouette on a 16-unit grid (brand/bunny/bunny-tray-*.svg), eyes and nose cut out ----
+    static readonly string[] TrayShapes =
     {
-        "M8.00 5.40 L10.25 6.70 L14.87 9.36 A7 7 0 0 0 12.61 2.74 Z",
-        "M10.25 6.70 L10.25 9.30 L10.25 14.63 A7 7 0 0 0 14.87 9.36 Z",
-        "M10.25 9.30 L8.00 10.60 L3.39 13.26 A7 7 0 0 0 10.25 14.63 Z",
-        "M8.00 10.60 L5.75 9.30 L1.13 6.64 A7 7 0 0 0 3.39 13.26 Z",
-        "M5.75 9.30 L5.75 6.70 L5.75 1.37 A7 7 0 0 0 1.13 6.64 Z",
-        "M5.75 6.70 L8.00 5.40 L12.61 2.74 A7 7 0 0 0 5.75 1.37 Z",
+        "M4.6 7.4C3.7 5.4 3.6 2.6 4.6 1.6c1-.9 2.1.5 2.2 2.8.1 1.3-.1 2.3-.4 3z",
+        "M9.1 7.4C8.8 5.6 9 3.8 10 3.1c1-.7 2.6-.3 3.4 1 .4.6 0 1.2-.7.9-.8-.4-1.5-.6-1.9-.1-.4.6-.3 1.6-.2 2.6z",
+        "M8 6.6c3.4 0 5.7 1.8 5.7 4.4 0 2.4-2.4 3.6-5.7 3.6s-5.7-1.2-5.7-3.6c0-2.6 2.3-4.4 5.7-4.4z",
     };
 
     static Geometry? trayShape;
@@ -43,16 +40,16 @@ static class AppIcons
     static Geometry TrayShape()
     {
         if (trayShape != null) return trayShape;
-        Geometry? union = null, gaps = null;
-        var pen = new Pen(Brushes.Black, 0.9) { LineJoin = PenLineJoin.Round };
-        foreach (var d in TrayBlades)
+        Geometry? union = null;
+        foreach (var d in TrayShapes)
         {
             var g = Geometry.Parse(d);
-            var w = g.GetWidenedPathGeometry(pen);
             union = union == null ? g : Geometry.Combine(union, g, GeometryCombineMode.Union, null);
-            gaps = gaps == null ? w : Geometry.Combine(gaps, w, GeometryCombineMode.Union, null);
         }
-        trayShape = Geometry.Combine(union!, gaps!, GeometryCombineMode.Exclude, null);
+        Geometry holes = new EllipseGeometry(new Point(5.1, 10.2), .95, .95);
+        holes = Geometry.Combine(holes, new EllipseGeometry(new Point(10.9, 9.9), .95, .95), GeometryCombineMode.Union, null);
+        holes = Geometry.Combine(holes, Geometry.Parse("M7.3 10.6h1.5L8 11.5z"), GeometryCombineMode.Union, null);
+        trayShape = Geometry.Combine(union!, holes, GeometryCombineMode.Exclude, null);
         trayShape.Freeze();
         return trayShape;
     }

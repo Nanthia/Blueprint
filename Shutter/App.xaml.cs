@@ -29,6 +29,15 @@ public partial class App : Application
         var mi = Array.IndexOf(e.Args, "--make-icon");
         if (mi >= 0 && mi + 1 < e.Args.Length) { AppIcons.WriteIco(e.Args[mi + 1]); Shutdown(); return; }
 
+        // developer helper: write the tray glyphs (normal and capturing) as PNGs and exit
+        var ti = Array.IndexOf(e.Args, "--make-tray");
+        if (ti >= 0 && ti + 1 < e.Args.Length)
+        {
+            using (var i1 = AppIcons.Tray(false)) i1.ToBitmap().Save(e.Args[ti + 1] + "-normal.png");
+            using (var i2 = AppIcons.Tray(true)) i2.ToBitmap().Save(e.Args[ti + 1] + "-capturing.png");
+            Shutdown(); return;
+        }
+
         mutex = new Mutex(true, "Shutter.SingleInstance", out bool first);
         if (!first) { Shutdown(); return; }
 

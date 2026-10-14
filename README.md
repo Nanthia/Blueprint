@@ -1,3 +1,5 @@
+<p align="center"><img src="Shutter%20Redesign/brand/bunny/bunny-app-icon-preview.png" alt="Shutter" width="120"></p>
+
 # Shutter
 
 A Windows screenshot and annotation tool for personal use, inspired by Shottr.
