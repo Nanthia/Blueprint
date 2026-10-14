@@ -39,6 +39,9 @@ public sealed class ToastWindow : Window
         ShowActivated = false;
         SizeToContent = SizeToContent.WidthAndHeight;
         Opacity = 0;
+        FontFamily = (FontFamily)Application.Current.FindResource("UiFont");
+        FontSize = 13;
+        Foreground = Ui.B("TextBrush");
 
         var grid = new Grid();
         grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
