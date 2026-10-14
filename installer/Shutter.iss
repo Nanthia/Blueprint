@@ -1,6 +1,6 @@
 ; Shutter installer (Inno Setup 6). Per-user install, no admin rights needed.
 #define AppName "Shutter"
-#define AppVersion "1.0.4"
+#define AppVersion "1.0.5"
 #define AppExe "Shutter.exe"
 
 [Setup]

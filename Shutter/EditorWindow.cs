@@ -1379,6 +1379,8 @@ public sealed class EditorWindow : ShutterWindow
     void PlaceBackdropPanel()
     {
         if (backdropPanel == null) return;
+        // detach the panel from wherever it currently lives before re-parenting it
+        if (backdropPopup.Child is Border oldCard) oldCard.Child = null;
         backdropHost.Child = null;
         backdropPopup.Child = null;
         if (backdropInPopup)

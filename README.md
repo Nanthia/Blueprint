@@ -2,9 +2,63 @@
 
 A Windows screenshot and annotation tool for personal use, inspired by Shottr.
 
-**Capture:** area, fullscreen, delayed, repeat last area, active window, any window (hover and click), scrolling capture, load from clipboard.
-**Editor:** arrow, line, rectangle, oval, text, freehand, highlighter, counters, blur/erase, spotlight, ruler, magnifier, color picker, crop/uncrop/resize, undo/redo.
-**Extras:** backdrops (gradient/solid/image/wallpaper), OCR and QR reading, pin to screen, screenshot library with text search, preview card, tray menu, preferences.
+![The Shutter editor with annotations](docs/screenshots/editor.png)
+
+## What it can do
+
+### Capture
+- **Area capture:** drag a rectangle on a frozen screen, with a live size readout, a pixel loupe and crosshair guides. Hold **Space** to move the selection.
+- **Fullscreen:** the screen under your cursor.
+- **Active window** and **any window:** hover a window to highlight it, then click to capture just that window.
+- **Delayed capture:** a 3-second timer, for menus and hover states.
+- **Repeat last area:** capture the same region again with one hotkey.
+- **Scrolling capture:** automatically scrolls down or up and stitches the result into one tall image (or scroll by hand in manual mode).
+- **Load from clipboard:** open any image you have copied in the editor.
+- **Multi-monitor:** each monitor gets its own picker overlay.
+
+### Annotate and edit
+- **Shapes:** arrow, line, rectangle, oval, each with outline, soft or solid fill.
+- **Pen tools:** freehand and highlighter, plus numbered counters (1, 2, 3...) for step-by-step guides.
+- **Text:** click to type directly on the image, with an optional background.
+- **Blur / erase:** pixelate a region, or cover it with a solid color. Erase can match the surroundings automatically or use a color you pick.
+- **Spotlight:** dim everything outside a rectangle to draw attention.
+- **Measuring and picking:** a pixel ruler, a magnifier lens, and a color picker that copies HEX, RGB or HSL.
+- **Image tools:** crop and uncrop, resize, undo and redo, and zoom (Ctrl + mouse wheel).
+- **Selection:** click any object to move it, resize it from its handles, change its color, or delete it. Every tool has a one-letter shortcut.
+
+### Make it look good
+- **Backdrops:** put the screenshot on a gradient, solid color, your own picture, your desktop wallpaper, or a blend of the screenshot's own colors. Adjust padding, corner radius, shadow and canvas shape (16:9, 4:3, 1:1 and more).
+
+### Get text out of images
+- **OCR:** drag over any text to copy it, using the text recognition built into Windows. No data leaves your PC.
+- **QR codes:** scanned automatically and copied.
+- **Searchable library:** the Library can search for words *inside* your saved screenshots.
+
+### Share and keep
+- **Copy, save or drag out:** copy to the clipboard, save as PNG or JPEG, or drag the image straight into another app.
+- **Pin to screen:** float any image above your other windows. Scroll to resize it, right-click to change its opacity.
+- **Library:** browse everything you have saved, with search, date filters, sorting, and quick copy, pin or delete.
+- **Preview card:** an optional small card in the corner after each capture, instead of the full editor.
+
+### Fits into your day
+- **Tray app:** always ready, with a menu for every action, and global hotkeys that you can change.
+- **Private:** everything runs on your PC. There is no account, no upload and no telemetry.
+- **Simple install:** one installer, no admin rights, and it starts with Windows if you like.
+
+## Screenshots
+
+### Editor with a backdrop
+![Editor with a backdrop panel](docs/screenshots/backdrop.png)
+
+### Library
+![The screenshot library](docs/screenshots/library.png)
+
+### Tray menu
+<img src="docs/screenshots/tray-menu.png" alt="The tray menu" width="320">
+
+### Preferences and hotkeys
+![Preferences](docs/screenshots/preferences.png)
+![Hotkeys](docs/screenshots/hotkeys.png)
 
 ---
 
