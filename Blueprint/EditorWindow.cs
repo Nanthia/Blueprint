@@ -11,11 +11,11 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
-namespace Shutter;
+namespace Blueprint;
 
 public enum Tool { Select, Arrow, Line, Rect, Oval, Text, Free, Highlight, Counter, Blur, Spot, Ruler, Magnifier, Picker, Ocr, Crop }
 
-public sealed class EditorWindow : ShutterWindow
+public sealed class EditorWindow : BlueprintWindow
 {
     sealed record Snapshot(BitmapSource Base, List<Ann> Objects);
 
@@ -1644,7 +1644,7 @@ public sealed class EditorWindow : ShutterWindow
             try
             {
                 var img = Flatten();
-                var dir = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "Shutter");
+                var dir = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "Blueprint");
                 Directory.CreateDirectory(dir);
                 var path = System.IO.Path.Combine(dir, "SCR-" + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".png");
                 Output.Encode(img, path, false);

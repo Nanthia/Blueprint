@@ -17,7 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
-namespace Shutter;
+namespace Blueprint;
 
 /// <summary>Cached OCR text per file (path + modified ticks), so search can look inside screenshots.</summary>
 static class LibraryIndex
@@ -96,7 +96,7 @@ public sealed class LibItem : INotifyPropertyChanged
 }
 
 /// <summary>Gallery of the screenshots in the default folder, with filename + in-image text search.</summary>
-public sealed class LibraryWindow : ShutterWindow
+public sealed class LibraryWindow : BlueprintWindow
 {
     static LibraryWindow? instance;
 
@@ -230,7 +230,7 @@ public sealed class LibraryWindow : ShutterWindow
         Loaded += (_, _) => { Refresh(); };
     }
 
-    const string NS = "xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml' xmlns:local='clr-namespace:Shutter;assembly=Shutter'";
+    const string NS = "xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml' xmlns:local='clr-namespace:Blueprint;assembly=Blueprint'";
 
     static readonly string ItemTemplateXaml = $@"
 <DataTemplate {NS}>
@@ -430,7 +430,7 @@ public sealed class LibraryWindow : ShutterWindow
         {
             stack.Children.Add(new TextBlock { Text = "Screenshots you save will appear here", FontSize = 20, FontWeight = FontWeights.SemiBold, HorizontalAlignment = HorizontalAlignment.Center, Margin = new Thickness(0, 26, 0, 12) });
             var watching = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Center };
-            watching.Children.Add(new TextBlock { Text = "Shutter is watching", Foreground = Ui.B("Text2Brush"), VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 10, 0) });
+            watching.Children.Add(new TextBlock { Text = "Blueprint is watching", Foreground = Ui.B("Text2Brush"), VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 10, 0) });
             watching.Children.Add(new Border
             {
                 Background = Ui.B("Bg2Brush"), BorderBrush = Ui.B("Line2Brush"), BorderThickness = new Thickness(1), CornerRadius = Ui.Radius("RadiusSm"), Padding = new Thickness(10, 4, 10, 4),

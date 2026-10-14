@@ -1,4 +1,4 @@
-<!-- Shutter design tokens for WPF. Merge into App.xaml alongside ShutterIcons.xaml. -->
+<!-- Blueprint design tokens for WPF. Merge into App.xaml alongside BlueprintIcons.xaml. -->
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:sys="clr-namespace:System;assembly=System.Runtime">

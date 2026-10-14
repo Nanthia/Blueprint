@@ -7,7 +7,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using Forms = System.Windows.Forms;
 
-namespace Shutter;
+namespace Blueprint;
 
 /// <summary>One row of the tray menu; a null entry is a separator.</summary>
 public sealed record TrayEntry(string Icon, string Label, string Keys, Action Run);
@@ -40,7 +40,7 @@ public sealed class TrayMenuWindow : Window
         FontFamily = (FontFamily)Application.Current.FindResource("UiFont");
         FontSize = 13;
         Foreground = Ui.B("TextBrush");
-        Title = "Shutter menu";
+        Title = "Blueprint menu";
 
         var stack = new StackPanel { Width = 340 };
 
@@ -50,7 +50,7 @@ public sealed class TrayMenuWindow : Window
         header.ColumnDefinitions.Add(new ColumnDefinition());
         header.Children.Add(new ApertureLogo { Width = 36, Height = 36, WithTile = true });
         var ht = new StackPanel { Margin = new Thickness(12, 0, 0, 0), VerticalAlignment = VerticalAlignment.Center };
-        ht.Children.Add(new TextBlock { Text = "Shutter", FontWeight = FontWeights.SemiBold, FontSize = 14 });
+        ht.Children.Add(new TextBlock { Text = "Blueprint", FontWeight = FontWeights.SemiBold, FontSize = 14 });
         ht.Children.Add(new TextBlock { Text = "Click the tray icon to capture an area", Foreground = Ui.B("Text3Brush"), FontSize = 12 });
         Grid.SetColumn(ht, 1);
         header.Children.Add(ht);

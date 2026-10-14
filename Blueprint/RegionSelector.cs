@@ -11,7 +11,7 @@ using System.Windows.Shapes;
 using Drawing = System.Drawing;
 using Forms = System.Windows.Forms;
 
-namespace Shutter;
+namespace Blueprint;
 
 /// <summary>Frozen-screen area picker: one borderless topmost window per monitor, like the original RegionSelector.</summary>
 static class RegionSelector

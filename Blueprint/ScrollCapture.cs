@@ -11,7 +11,7 @@ using System.Windows.Media.Imaging;
 using Drawing = System.Drawing;
 using Forms = System.Windows.Forms;
 
-namespace Shutter;
+namespace Blueprint;
 
 /// <summary>One captured frame, with a subsampled luma plane used to find how far the content scrolled.</summary>
 sealed class StitchFrame
@@ -361,7 +361,7 @@ sealed class ScrollHud : Window
         Topmost = true;
         ShowActivated = false;
         SizeToContent = SizeToContent.WidthAndHeight;
-        Title = "Shutter scrolling capture";
+        Title = "Blueprint scrolling capture";
         FontFamily = (FontFamily)Application.Current.FindResource("UiFont");
         FontSize = 14;
         Foreground = Ui.B("TextBrush");
@@ -432,7 +432,7 @@ sealed class ScrollHud : Window
             var h = new WindowInteropHelper(this).Handle;
             int ex = Native.GetWindowLong(h, Native.GWL_EXSTYLE);
             Native.SetWindowLong(h, Native.GWL_EXSTYLE, ex | Native.WS_EX_NOACTIVATE | Native.WS_EX_TOOLWINDOW);
-            if (Environment.GetEnvironmentVariable("SHUTTER_SHOW_HUD") != "1")
+            if (Environment.GetEnvironmentVariable("BLUEPRINT_SHOW_HUD") != "1")
                 Native.SetWindowDisplayAffinity(h, 0x11 /* WDA_EXCLUDEFROMCAPTURE */);
         };
         ContentRendered += (_, _) => Place();
@@ -512,7 +512,7 @@ sealed class ScrollBorder : Window
             var h = new WindowInteropHelper(this).Handle;
             int ex = Native.GetWindowLong(h, Native.GWL_EXSTYLE);
             Native.SetWindowLong(h, Native.GWL_EXSTYLE, ex | Native.WS_EX_TRANSPARENT | Native.WS_EX_NOACTIVATE | Native.WS_EX_TOOLWINDOW);
-            if (Environment.GetEnvironmentVariable("SHUTTER_SHOW_HUD") != "1")
+            if (Environment.GetEnvironmentVariable("BLUEPRINT_SHOW_HUD") != "1")
                 Native.SetWindowDisplayAffinity(h, 0x11);
         };
         ContentRendered += (_, _) => Fix();

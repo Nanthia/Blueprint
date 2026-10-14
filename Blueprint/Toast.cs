@@ -8,7 +8,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
-namespace Shutter;
+namespace Blueprint;
 
 /// <summary>Dark toast card in the bottom-right corner (replaces the tray balloon). Never takes focus.</summary>
 public sealed class ToastWindow : Window

@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace Shutter;
+namespace Blueprint;
 
 static class Native
 {

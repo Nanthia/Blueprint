@@ -6,9 +6,9 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 
-namespace Shutter;
+namespace Blueprint;
 
-public sealed class ResizeDialog : ShutterWindow
+public sealed class ResizeDialog : BlueprintWindow
 {
     public int NewWidth { get; private set; }
     public int NewHeight { get; private set; }

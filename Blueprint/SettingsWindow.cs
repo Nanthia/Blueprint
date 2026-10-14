@@ -6,10 +6,10 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace Shutter;
+namespace Blueprint;
 
 /// <summary>Preferences: sidebar navigation, setting rows with immediate apply, find-a-setting search, hotkey recorder.</summary>
-public sealed class SettingsWindow : ShutterWindow
+public sealed class SettingsWindow : BlueprintWindow
 {
     sealed record Row(string Page, string Section, string Icon, string Title, string? Subtitle, Func<FrameworkElement> Control, bool Tall = false);
 
@@ -65,7 +65,7 @@ public sealed class SettingsWindow : ShutterWindow
 
         var footer = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(18, 0, 18, 16) };
         footer.Children.Add(new ApertureLogo { Width = 22, Height = 22 });
-        footer.Children.Add(new TextBlock { Text = "Shutter " + AppVersion(), Foreground = Ui.B("Text3Brush"), Margin = new Thickness(10, 0, 0, 0), VerticalAlignment = VerticalAlignment.Center });
+        footer.Children.Add(new TextBlock { Text = "Blueprint " + AppVersion(), Foreground = Ui.B("Text3Brush"), Margin = new Thickness(10, 0, 0, 0), VerticalAlignment = VerticalAlignment.Center });
         DockPanel.SetDock(footer, Dock.Bottom);
         panel.Children.Add(footer);
 
@@ -145,7 +145,7 @@ public sealed class SettingsWindow : ShutterWindow
         Action nop = () => { };
 
         // General
-        rows.Add(new Row("General", "Startup", "Power", "Launch at Windows startup", "Shutter starts in the tray when you sign in",
+        rows.Add(new Row("General", "Startup", "Power", "Launch at Windows startup", "Blueprint starts in the tray when you sign in",
             () => Toggle(() => s.StartWithWindows, v => s.StartWithWindows = v, nop)));
 
         // Capture
@@ -326,7 +326,7 @@ public sealed class SettingsWindow : ShutterWindow
         g.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
         g.Children.Add(new ApertureLogo { Width = 44, Height = 44, WithTile = true });
         var t = new StackPanel { Margin = new Thickness(14, 0, 0, 0), VerticalAlignment = VerticalAlignment.Center };
-        t.Children.Add(new TextBlock { Text = "Shutter", FontSize = 14, FontWeight = FontWeights.SemiBold });
+        t.Children.Add(new TextBlock { Text = "Blueprint", FontSize = 14, FontWeight = FontWeights.SemiBold });
         t.Children.Add(new TextBlock { Text = "Settings and logs are stored in " + Settings.Dir, FontSize = 12, Foreground = Ui.B("Text3Brush"), Margin = new Thickness(0, 2, 0, 0) });
         Grid.SetColumn(t, 1);
         g.Children.Add(t);

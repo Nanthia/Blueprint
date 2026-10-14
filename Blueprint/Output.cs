@@ -5,7 +5,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace Shutter;
+namespace Blueprint;
 
 static class Output
 {
@@ -48,7 +48,7 @@ static class Output
     {
         try
         {
-            var dir = Path.Combine(Path.GetTempPath(), "Shutter");
+            var dir = Path.Combine(Path.GetTempPath(), "Blueprint");
             Directory.CreateDirectory(dir);
             var path = Path.Combine(dir, "SCR-" + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".png");
             Encode(img, path, false);

@@ -11,7 +11,7 @@ using System.Windows.Threading;
 using Drawing = System.Drawing;
 using Forms = System.Windows.Forms;
 
-namespace Shutter;
+namespace Blueprint;
 
 public partial class App : Application
 {
@@ -39,7 +39,7 @@ public partial class App : Application
             Shutdown(); return;
         }
 
-        mutex = new Mutex(true, "Shutter.SingleInstance", out bool first);
+        mutex = new Mutex(true, "Blueprint.SingleInstance", out bool first);
         if (!first) { Shutdown(); return; }
 
         DispatcherUnhandledException += (_, ex) =>
@@ -74,7 +74,7 @@ public partial class App : Application
         hotkeys = new HotkeyService(RunAction);
         RegisterHotkeys();
         Log("Running in the tray.");
-        ToastWindow.Show("Shutter is running in the tray", "Capture an area with", keys: Settings.Current.Hotkeys.GetValueOrDefault("Area", ""));
+        ToastWindow.Show("Blueprint is running in the tray", "Capture an area with", keys: Settings.Current.Hotkeys.GetValueOrDefault("Area", ""));
         if (Array.Exists(e.Args, a => a == "--settings")) ShowSettings();
         if (Array.Exists(e.Args, a => a == "--library")) LibraryWindow.ShowOrActivate();
         if (Array.Exists(e.Args, a => a == "--menu")) OpenTrayMenu();
@@ -102,7 +102,7 @@ public partial class App : Application
 
     void BuildTray()
     {
-        tray = new Forms.NotifyIcon { Icon = AppIcons.Tray(false), Text = "Shutter", Visible = true };
+        tray = new Forms.NotifyIcon { Icon = AppIcons.Tray(false), Text = "Blueprint", Visible = true };
         tray.MouseUp += (_, e) =>
         {
             if (e.Button == Forms.MouseButtons.Left) RunAction("Area");
@@ -141,7 +141,7 @@ public partial class App : Application
             E("Folder", "Open screenshots folder", "", OpenFolder),
             E("Settings", "Preferences…", "", ShowSettings),
             null,
-            E("Power", "Quit Shutter", "", Shutdown),
+            E("Power", "Quit Blueprint", "", Shutdown),
         });
     }
 

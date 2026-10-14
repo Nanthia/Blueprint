@@ -7,7 +7,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
-namespace Shutter;
+namespace Blueprint;
 
 /// <summary>Floating always-on-top image (the original's PinWindowController).</summary>
 public sealed class PinWindow : Window

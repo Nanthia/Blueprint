@@ -1,10 +1,10 @@
-<p align="center"><img src="Shutter%20Redesign/brand/bunny/bunny-app-icon-preview.png" alt="Shutter" width="120"></p>
+<p align="center"><img src="Shutter%20Redesign/brand/bunny/bunny-app-icon-preview.png" alt="Blueprint" width="120"></p>
 
-# Shutter
+# Blueprint
 
 A Windows screenshot and annotation tool for personal use, inspired by Shottr.
 
-![The Shutter editor with annotations](docs/screenshots/editor.png)
+![The Blueprint editor with annotations](docs/screenshots/editor.png)
 
 ## What it can do
 
@@ -68,22 +68,22 @@ A Windows screenshot and annotation tool for personal use, inspired by Shottr.
 
 **You do not need to build anything.** Just download the installer and run it.
 
-1. Open the **[Releases page](https://github.com/Nanthia/Shutter/releases/latest)**.
-2. Under **Assets**, click **`Shutter-Setup-<version>.exe`** (for example `Shutter-Setup-1.0.4.exe`) to download it.
+1. Open the **[Releases page](https://github.com/Nanthia/Blueprint/releases/latest)**.
+2. Under **Assets**, click **`Blueprint-Setup-<version>.exe`** (for example `Blueprint-Setup-1.1.0.exe`) to download it.
    Ignore the "Source code (zip)" and "Source code (tar.gz)" links; those are for developers.
 3. Run the downloaded file. If Windows shows a blue **"Windows protected your PC"** screen (the installer isn't code-signed), click **More info**, then **Run anyway**.
-4. Follow the wizard. You can choose a desktop shortcut and whether Shutter starts when you sign in.
-5. Shutter runs in the system tray, near the clock (check the hidden-icons arrow if you don't see it). Click the tray icon, or press **Ctrl+Shift+4**, to capture an area.
+4. Follow the wizard. You can choose a desktop shortcut and whether Blueprint starts when you sign in.
+5. Blueprint runs in the system tray, near the clock (check the hidden-icons arrow if you don't see it). Click the tray icon, or press **Ctrl+Shift+4**, to capture an area.
 
-That's it. The installer includes everything Shutter needs, including the .NET runtime, so there is nothing else to download or install.
+That's it. The installer includes everything Blueprint needs, including the .NET runtime, so there is nothing else to download or install.
 
 **Requirements:** 64-bit Windows 10 (version 2004 or newer) or Windows 11. No admin rights needed.
 
 ### Updating, uninstalling, moving to a new PC
 
 - **Update:** run a newer installer over the old one. It closes the running app and keeps your settings.
-- **Uninstall:** Windows **Settings > Apps > Installed apps > Shutter**. Your saved screenshots are never deleted.
-- **New PC:** install the same way. To bring your settings across, copy `%AppData%\Shutter` (and your screenshots folder, `Pictures\Shutter` by default) from the old PC.
+- **Uninstall:** Windows **Settings > Apps > Installed apps > Blueprint**. Your saved screenshots are never deleted.
+- **New PC:** install the same way. To bring your settings across, copy `%AppData%\Blueprint` (and your screenshots folder, `Pictures\Blueprint` by default) from the old PC.
 
 ## Default hotkeys
 
@@ -100,7 +100,7 @@ That's it. The installer includes everything Shutter needs, including the .NET r
 | Recognize text / QR | Ctrl+Shift+2 |
 | Library | Ctrl+Shift+0 |
 
-All hotkeys can be changed in **Preferences > Hotkeys**. Settings and logs are stored in `%AppData%\Shutter`.
+All hotkeys can be changed in **Preferences > Hotkeys**. Settings and logs are stored in `%AppData%\Blueprint`.
 
 ---
 
@@ -112,25 +112,25 @@ You need Git, the .NET 8 SDK and [Inno Setup 6](https://jrsoftware.org/isinfo.ph
 
 ```powershell
 winget install Git.Git Microsoft.DotNet.SDK.8 JRSoftware.InnoSetup
-git clone https://github.com/Nanthia/Shutter.git
-cd Shutter
+git clone https://github.com/Nanthia/Blueprint.git
+cd Blueprint
 .\build.ps1                                          # self-contained exe + installer in installer\output\
-dotnet build Shutter\Shutter.csproj -c Release      # or just a quick dev build
+dotnet build Blueprint\Blueprint.csproj -c Release      # or just a quick dev build
 ```
 
-To publish a new release, bump the version in `Shutter\Shutter.csproj` and `installer\Shutter.iss`, run `.\build.ps1`, then:
+To publish a new release, bump the version in `Blueprint\Blueprint.csproj` and `installer\Blueprint.iss`, run `.\build.ps1`, then:
 
 ```powershell
-gh release create v1.0.5 installer\output\Shutter-Setup-1.0.5.exe --title "Shutter 1.0.5" --notes "What changed"
+gh release create v1.0.5 installer\output\Blueprint-Setup-1.0.5.exe --title "Blueprint 1.0.5" --notes "What changed"
 ```
 
 ### Repository layout
 
 | Path | Contents |
 | --- | --- |
-| `Shutter/` | The WPF / .NET 8 app |
-| `Shutter/Resources/` | Theme tokens, icon geometries, control styles |
-| `installer/Shutter.iss` | Inno Setup script (per-user install, no admin) |
+| `Blueprint/` | The WPF / .NET 8 app |
+| `Blueprint/Resources/` | Theme tokens, icon geometries, control styles |
+| `installer/Blueprint.iss` | Inno Setup script (per-user install, no admin) |
 | `build.ps1` | Builds the app and the installer |
 | `Shutter Redesign/` | UI mockups, icons and brand assets the UI was built from |
 | `docs/` | Notes on the original app's structure |

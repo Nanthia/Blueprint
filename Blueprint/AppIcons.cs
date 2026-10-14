@@ -7,7 +7,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Drawing = System.Drawing;
 
-namespace Shutter;
+namespace Blueprint;
 
 /// <summary>Window and tray icons drawn from the bunny brand geometry (no image files needed at runtime).</summary>
 static class AppIcons

@@ -5,7 +5,7 @@ using System.Windows.Media.Imaging;
 using Drawing = System.Drawing;
 using Forms = System.Windows.Forms;
 
-namespace Shutter;
+namespace Blueprint;
 
 static class ScreenCapture
 {

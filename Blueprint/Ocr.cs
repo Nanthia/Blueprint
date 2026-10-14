@@ -12,7 +12,7 @@ using Windows.Media.Ocr;
 using ZXing;
 using ZXing.Common;
 
-namespace Shutter;
+namespace Blueprint;
 
 /// <param name="Kind">qr | text | none | unavailable | error</param>
 public sealed record OcrOutcome(string Kind, string? Text, string? Error = null);

@@ -8,7 +8,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
-namespace Shutter;
+namespace Blueprint;
 
 /// <summary>Small corner card shown after a capture instead of the full editor.</summary>
 public sealed class PreviewWindow : Window
@@ -32,7 +32,7 @@ public sealed class PreviewWindow : Window
         Topmost = true;
         SizeToContent = SizeToContent.WidthAndHeight;
         ShowActivated = false;
-        Title = "Shutter preview";
+        Title = "Blueprint preview";
         Opacity = 0;
         FontFamily = (FontFamily)Application.Current.FindResource("UiFont");
         Foreground = Ui.B("TextBrush");

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows.Input;
 using System.Windows.Interop;
 
-namespace Shutter;
+namespace Blueprint;
 
 sealed class HotkeyService : IDisposable
 {
@@ -16,7 +16,7 @@ sealed class HotkeyService : IDisposable
     public HotkeyService(Action<string> onAction)
     {
         this.onAction = onAction;
-        source = new HwndSource(new HwndSourceParameters("ShutterHotkeys") { ParentWindow = new IntPtr(-3), Width = 0, Height = 0 });
+        source = new HwndSource(new HwndSourceParameters("BlueprintHotkeys") { ParentWindow = new IntPtr(-3), Width = 0, Height = 0 });
         source.AddHook(Hook);
         PauseRequested += OnPause;
     }

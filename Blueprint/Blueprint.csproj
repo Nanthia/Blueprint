@@ -6,11 +6,11 @@
     <ImplicitUsings>disable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
-    <AssemblyName>Shutter</AssemblyName>
-    <RootNamespace>Shutter</RootNamespace>
+    <AssemblyName>Blueprint</AssemblyName>
+    <RootNamespace>Blueprint</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>app.ico</ApplicationIcon>
-    <Version>1.0.7</Version>
+    <Version>1.1.0</Version>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="ZXing.Net" Version="0.16.9" />

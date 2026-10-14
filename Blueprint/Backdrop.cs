@@ -5,7 +5,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace Shutter;
+namespace Blueprint;
 
 /// <summary>Backdrop ("pretty background") options. Modes: solid | gradient | image | mix (colours blended from the screenshot).</summary>
 public sealed class BackdropSettings

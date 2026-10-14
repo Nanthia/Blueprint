@@ -8,7 +8,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Shell;
 
-namespace Shutter;
+namespace Blueprint;
 
 /// <summary>Draws one of the Icon.* geometries (24-unit grid) in the inherited Foreground colour.</summary>
 public sealed class IconPresenter : Control
@@ -67,7 +67,7 @@ public sealed class IconPresenter : Control
     }
 }
 
-/// <summary>The Shutter bunny mark (from brand/bunny/bunny-app-icon.svg), optionally on the rounded app tile.</summary>
+/// <summary>The Blueprint bunny mark (from brand/bunny/bunny-app-icon.svg), optionally on the rounded app tile.</summary>
 public sealed class ApertureLogo : FrameworkElement
 {
     public static readonly DependencyProperty WithTileProperty = DependencyProperty.Register(nameof(WithTile), typeof(bool), typeof(ApertureLogo),
@@ -146,19 +146,19 @@ public sealed class ApertureLogo : FrameworkElement
     protected override void OnRender(DrawingContext dc) => Draw(dc, Math.Min(ActualWidth, ActualHeight), WithTile);
 }
 
-/// <summary>Borderless window with the Shutter title bar: logo, title, optional left/right slots, caption buttons.</summary>
-public class ShutterWindow : Window
+/// <summary>Borderless window with the Blueprint title bar: logo, title, optional left/right slots, caption buttons.</summary>
+public class BlueprintWindow : Window
 {
-    static ShutterWindow()
+    static BlueprintWindow()
     {
-        DefaultStyleKeyProperty.OverrideMetadata(typeof(ShutterWindow), new FrameworkPropertyMetadata(typeof(ShutterWindow)));
+        DefaultStyleKeyProperty.OverrideMetadata(typeof(BlueprintWindow), new FrameworkPropertyMetadata(typeof(BlueprintWindow)));
     }
 
-    public static readonly DependencyProperty SubtitleProperty = DependencyProperty.Register(nameof(Subtitle), typeof(string), typeof(ShutterWindow), new PropertyMetadata(""));
-    public static readonly DependencyProperty TitleLeftProperty = DependencyProperty.Register(nameof(TitleLeft), typeof(object), typeof(ShutterWindow));
-    public static readonly DependencyProperty TitleRightProperty = DependencyProperty.Register(nameof(TitleRight), typeof(object), typeof(ShutterWindow));
-    public static readonly DependencyProperty ShowMaximizeProperty = DependencyProperty.Register(nameof(ShowMaximize), typeof(bool), typeof(ShutterWindow), new PropertyMetadata(true));
-    public static readonly DependencyProperty ShowMinimizeProperty = DependencyProperty.Register(nameof(ShowMinimize), typeof(bool), typeof(ShutterWindow), new PropertyMetadata(true));
+    public static readonly DependencyProperty SubtitleProperty = DependencyProperty.Register(nameof(Subtitle), typeof(string), typeof(BlueprintWindow), new PropertyMetadata(""));
+    public static readonly DependencyProperty TitleLeftProperty = DependencyProperty.Register(nameof(TitleLeft), typeof(object), typeof(BlueprintWindow));
+    public static readonly DependencyProperty TitleRightProperty = DependencyProperty.Register(nameof(TitleRight), typeof(object), typeof(BlueprintWindow));
+    public static readonly DependencyProperty ShowMaximizeProperty = DependencyProperty.Register(nameof(ShowMaximize), typeof(bool), typeof(BlueprintWindow), new PropertyMetadata(true));
+    public static readonly DependencyProperty ShowMinimizeProperty = DependencyProperty.Register(nameof(ShowMinimize), typeof(bool), typeof(BlueprintWindow), new PropertyMetadata(true));
 
     public string Subtitle { get => (string)GetValue(SubtitleProperty); set => SetValue(SubtitleProperty, value); }
     public object? TitleLeft { get => GetValue(TitleLeftProperty); set => SetValue(TitleLeftProperty, value); }
@@ -166,10 +166,10 @@ public class ShutterWindow : Window
     public bool ShowMaximize { get => (bool)GetValue(ShowMaximizeProperty); set => SetValue(ShowMaximizeProperty, value); }
     public bool ShowMinimize { get => (bool)GetValue(ShowMinimizeProperty); set => SetValue(ShowMinimizeProperty, value); }
 
-    public ShutterWindow()
+    public BlueprintWindow()
     {
         // implicit styles are not inherited by derived window types, so reference the base style explicitly
-        SetResourceReference(StyleProperty, typeof(ShutterWindow));
+        SetResourceReference(StyleProperty, typeof(BlueprintWindow));
         Icon = AppIcons.WindowIcon;
         WindowStyle = WindowStyle.None;
         WindowChrome.SetWindowChrome(this, new WindowChrome

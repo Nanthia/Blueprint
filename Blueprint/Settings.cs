@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 
-namespace Shutter;
+namespace Blueprint;
 
 public sealed class Settings
 {
-    public string Folder { get; set; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "Shutter");
+    public string Folder { get; set; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "Blueprint");
     public bool AfterGrabCopy { get; set; } = true;
     public bool AfterGrabSave { get; set; } = false;
     public string ShowMode { get; set; } = "Editor"; // Editor | Preview | Nothing
@@ -38,13 +38,14 @@ public sealed class Settings
         ["Clipboard"] = "Ctrl+Shift+8",
     };
 
-    public static readonly string Dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Shutter");
+    public static readonly string Dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Blueprint");
     static string FilePath => Path.Combine(Dir, "settings.json");
 
     public static Settings Current { get; private set; } = Load();
 
     static Settings Load()
     {
+        MigrateFromShutter();
         try
         {
             if (File.Exists(FilePath))
@@ -73,14 +74,28 @@ public sealed class Settings
         ApplyStartup();
     }
 
+    /// <summary>The app used to be called Shutter: carry its settings and search index over once.</summary>
+    static void MigrateFromShutter()
+    {
+        try
+        {
+            var old = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Shutter");
+            if (Directory.Exists(Dir) || !Directory.Exists(old)) return;
+            Directory.CreateDirectory(Dir);
+            foreach (var f in Directory.GetFiles(old)) File.Copy(f, Path.Combine(Dir, Path.GetFileName(f)), true);
+        }
+        catch { }
+    }
+
     void ApplyStartup()
     {
         try
         {
             using var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run", true);
             if (key == null) return;
-            if (StartWithWindows) key.SetValue("Shutter", "\"" + Environment.ProcessPath + "\"");
-            else key.DeleteValue("Shutter", false);
+            key.DeleteValue("Shutter", false); // entry left by the old name
+            if (StartWithWindows) key.SetValue("Blueprint", "\"" + Environment.ProcessPath + "\"");
+            else key.DeleteValue("Blueprint", false);
         }
         catch { }
     }
