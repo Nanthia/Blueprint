@@ -57,7 +57,7 @@ To rebuild on a fresh PC you need Git, the .NET 8 SDK and Inno Setup 6:
 winget install Git.Git Microsoft.DotNet.SDK.8 JRSoftware.InnoSetup
 git clone https://github.com/Nanthia/Shutter.git
 cd Shutter
-.uild.ps1
+.\build.ps1
 ```
 
 Publishing a release (after bumping the version in `Shutter\Shutter.csproj` and `installer\Shutter.iss`):
