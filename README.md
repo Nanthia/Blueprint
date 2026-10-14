@@ -12,7 +12,7 @@ A Windows screenshot and annotation tool for personal use, inspired by Shottr.
 
 **You do not need to build anything.** Just download the installer and run it.
 
-1. Open the **[Releases page](https://github.com/Nanthia/Shutter/releases/latest)** (sign in to GitHub first if the repo is private).
+1. Open the **[Releases page](https://github.com/Nanthia/Shutter/releases/latest)**.
 2. Under **Assets**, click **`Shutter-Setup-<version>.exe`** (for example `Shutter-Setup-1.0.4.exe`) to download it.
    Ignore the "Source code (zip)" and "Source code (tar.gz)" links; those are for developers.
 3. Run the downloaded file. If Windows shows a blue **"Windows protected your PC"** screen (the installer isn't code-signed), click **More info**, then **Run anyway**.
