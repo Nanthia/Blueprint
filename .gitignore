@@ -1,0 +1,19 @@
+# build output
+bin/
+obj/
+dist/
+dist-sc/
+installer/output/
+*.pdb
+
+# reverse-engineering material from the original (proprietary) app: keep local only
+decomp/
+extracted/
+*.dmg
+
+# editor / OS
+.vs/
+.vscode/
+*.user
+Thumbs.db
+.claude/
