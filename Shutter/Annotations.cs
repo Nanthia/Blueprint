@@ -134,6 +134,29 @@ public sealed class OvalAnn : TwoPointAnn
 public sealed class BlurAnn : TwoPointAnn
 {
     public override bool SupportsFill => true;
+    public bool UseColor; // erase with the chosen colour instead of the automatic surrounding colour
+
+    /// <summary>Average colour of the 1px ring just outside the region (falls back to the region itself at the image edge).</summary>
+    static Color RingColor(BitmapSource src, Int32Rect r)
+    {
+        long sr = 0, sg = 0, sb = 0, n = 0;
+        int W = src.PixelWidth, H = src.PixelHeight;
+        void Strip(int x, int y, int w, int h)
+        {
+            x = Math.Clamp(x, 0, W - 1); y = Math.Clamp(y, 0, H - 1);
+            w = Math.Min(w, W - x); h = Math.Min(h, H - y);
+            if (w <= 0 || h <= 0) return;
+            var buf = new byte[w * h * 4];
+            new CroppedBitmap(new FormatConvertedBitmap(src, PixelFormats.Bgra32, null, 0), new Int32Rect(x, y, w, h)).CopyPixels(buf, w * 4, 0);
+            for (int i = 0; i < buf.Length; i += 4) { sb += buf[i]; sg += buf[i + 1]; sr += buf[i + 2]; n++; }
+        }
+        Strip(r.X, r.Y - 1, r.Width, 1);                 // above
+        Strip(r.X, r.Y + r.Height, r.Width, 1);          // below
+        Strip(r.X - 1, r.Y, 1, r.Height);                // left
+        Strip(r.X + r.Width, r.Y, 1, r.Height);          // right
+        if (n == 0) Strip(r.X, r.Y, r.Width, r.Height);
+        return n == 0 ? Colors.Gray : Color.FromRgb((byte)(sr / n), (byte)(sg / n), (byte)(sb / n));
+    }
     public override void Draw(DrawingContext dc, DrawCtx c)
     {
         var b = Rect.Intersect(Bounds, new Rect(0, 0, c.Base.PixelWidth, c.Base.PixelHeight));
@@ -143,10 +166,8 @@ public sealed class BlurAnn : TwoPointAnn
         ir.Height = Math.Min(ir.Height, c.Base.PixelHeight - ir.Y);
         if (FillMode == 1)
         {
-            var px = new byte[4];
-            new CroppedBitmap(new FormatConvertedBitmap(c.Base, PixelFormats.Bgra32, null, 0), new Int32Rect(ir.X, ir.Y, 1, 1))
-                .CopyPixels(px, 4, 0);
-            dc.DrawRectangle(new SolidColorBrush(Color.FromRgb(px[2], px[1], px[0])), null, new Rect(ir.X, ir.Y, ir.Width, ir.Height));
+            var fill = UseColor ? Color : RingColor(c.Base, ir);
+            dc.DrawRectangle(new SolidColorBrush(fill), null, new Rect(ir.X, ir.Y, ir.Width, ir.Height));
             return;
         }
         double block = Math.Max(4, Size * 2.5);
@@ -158,7 +179,7 @@ public sealed class BlurAnn : TwoPointAnn
         dc.DrawDrawing(dg);
     }
     public override bool Hit(Point p, double tol) => Rect.Inflate(Bounds, tol, tol).Contains(p);
-    public override Ann Clone() => CloneTo(new BlurAnn());
+    public override Ann Clone() { var t = CloneTo(new BlurAnn()); t.UseColor = UseColor; return t; }
 }
 
 public sealed class SpotlightAnn : TwoPointAnn

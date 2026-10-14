@@ -71,6 +71,8 @@ public sealed class EditorWindow : ShutterWindow
     readonly List<(Color color, Ellipse ring)> swatchRings = new();
     Ellipse? customRing;
     bool suppress;
+    bool eraseColorChosen;           // erase with a picked colour (false = automatic surrounding colour)
+    readonly Button eraseAutoBtn = new() { Content = "Auto", MinHeight = 28, Padding = new Thickness(10, 0, 10, 0), Margin = new Thickness(8, 0, 0, 0), ToolTip = "Match the colour around the box" };
 
     // ---- status bar ----
     readonly StackPanel statusLeft = new() { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(14, 0, 0, 0) };
@@ -295,7 +297,7 @@ public sealed class EditorWindow : ShutterWindow
               (Tool.Rect, "Rect", "Rectangle", "R", "Outline, soft or solid fill"), (Tool.Oval, "Oval", "Oval", "O", "Outline, soft or solid fill"));
         Group((Tool.Free, "Freehand", "Freehand", "D", "Smoothed pen"), (Tool.Highlight, "Highlighter", "Highlighter", "H", "Wide translucent stroke"),
               (Tool.Text, "Text", "Text", "T", "Click to type on the image"), (Tool.Counter, "Counter", "Counter", "C", "Numbered markers"));
-        Group((Tool.Blur, "Blur", "Blur / Erase", "B", "Pixelate or erase a region"), (Tool.Spot, "Spotlight", "Spotlight", "S", "Dim everything outside a rectangle"));
+        Group((Tool.Blur, "Blur", "Blur / Erase", "B", "Pixelate a region, or switch to Erase in the bar above to cover it with a solid colour"), (Tool.Spot, "Spotlight", "Spotlight", "S", "Dim everything outside a rectangle"));
         Group((Tool.Ruler, "Ruler", "Ruler", "1 / 2", "Measure pixel distances"), (Tool.Magnifier, "Magnifier", "Magnifier", "M", "Zoom into a detail"),
               (Tool.Picker, "Picker", "Color picker", "I", "Click to copy a colour"));
         Group((Tool.Crop, "Crop", "Crop", "X", "Drag a region, Enter to apply"));
@@ -334,6 +336,8 @@ public sealed class EditorWindow : ShutterWindow
         });
         custom.MouseLeftButtonDown += (_, _) => PickCustomColor();
         gColor.Children.Add(custom);
+        eraseAutoBtn.Click += (_, _) => { eraseColorChosen = false; AttrChanged(a => { if (a is BlurAnn b) b.UseColor = false; }); RefreshContext(); };
+        gColor.Children.Add(eraseAutoBtn);
 
         // width
         gWidth.Children.Add(widthLabel);
@@ -609,7 +613,10 @@ public sealed class EditorWindow : ShutterWindow
             if (sel is RulerAnn ra) rulerAxis = ra.Axis;
             if (!(sel is SpotlightAnn or BlurAnn)) { color = sel.Color; }
         }
-        gColor.Visibility = o.Color ? Visibility.Visible : Visibility.Collapsed;
+        bool eraseMode = (o.Blur && blurMode == 1) || (showSelection && sel is BlurAnn { FillMode: 1 });
+        gColor.Visibility = o.Color || eraseMode ? Visibility.Visible : Visibility.Collapsed;
+        eraseAutoBtn.Visibility = eraseMode ? Visibility.Visible : Visibility.Collapsed;
+        eraseAutoBtn.Opacity = eraseColorChosen ? 0.6 : 1;
         gWidth.Visibility = o.WidthLabel != null ? Visibility.Visible : Visibility.Collapsed;
         widthLabel.Text = o.WidthLabel ?? "";
         gFill.Visibility = o.FillLabels != null ? Visibility.Visible : Visibility.Collapsed;
@@ -636,6 +643,13 @@ public sealed class EditorWindow : ShutterWindow
         UpdateWidthValue();
         UpdateCropText();
         SetSwatch(color);
+        if (eraseMode && !(showSelection && sel is BlurAnn { UseColor: true }) && !eraseColorChosen)
+        {
+            // Auto erase colour: no swatch is "selected"
+            foreach (var (_, ring) in swatchRings) ring.Visibility = Visibility.Hidden;
+            if (customRing != null) customRing.Visibility = Visibility.Hidden;
+        }
+        eraseAutoBtn.Background = eraseMode && !eraseColorChosen ? Ui.B("Bg4Brush") : Ui.B("Bg3Brush");
         deleteBtn.Visibility = showSelection ? Visibility.Visible : Visibility.Collapsed;
 
         // hint
@@ -765,7 +779,10 @@ public sealed class EditorWindow : ShutterWindow
     {
         color = c;
         SetSwatch(c);
-        AttrChanged(a => a.Color = c);
+        bool eraseCtx = tool == Tool.Blur && blurMode == 1;
+        if (eraseCtx) eraseColorChosen = true;
+        AttrChanged(a => { a.Color = c; if (a is BlurAnn b && b.FillMode == 1) b.UseColor = true; });
+        if (eraseCtx) RefreshContext();
     }
 
     void PickCustomColor()
@@ -946,6 +963,7 @@ public sealed class EditorWindow : ShutterWindow
                 obj.Color = color;
                 obj.Size = sizeSlider.Value;
                 if (obj.SupportsFill) obj.FillMode = obj is BlurAnn ? blurMode : fillMode;
+                if (obj is BlurAnn nb) nb.UseColor = blurMode == 1 && eraseColorChosen;
                 surface.Objects.Add(obj);
                 surface.Selected = obj;
                 drag = Drag.Create;
