@@ -23,7 +23,8 @@ public sealed class ToastWindow : Window
         Application.Current.Dispatcher.BeginInvoke(new Action(() =>
         {
             // keep at most 3 on screen
-            while (open.Count >= 3) open[0].Dismiss();
+            // retire the oldest toasts (removed from the list immediately, so this loop always terminates)
+            while (open.Count >= 3) { var oldest = open[0]; open.RemoveAt(0); oldest.Dismiss(); }
             new ToastWindow(title, subtitle, thumb, ok, keys, seconds).ShowInactive();
         }));
     }
@@ -121,6 +122,8 @@ public sealed class ToastWindow : Window
     {
         if (closing) return;
         closing = true;
+        open.Remove(this);
+        Reposition();
         timer.Stop();
         var fade = new DoubleAnimation(Opacity, 0, TimeSpan.FromMilliseconds(180));
         fade.Completed += (_, _) => Close();
